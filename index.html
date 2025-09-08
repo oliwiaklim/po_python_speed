@@ -84,7 +84,7 @@ samochod1 = Samochod("Toyota", "Camry")
 						konkretnym obiekcie operuje. Kiedy wywoływana jest metoda na instancji klasy, Python
 						automatycznie przekazuje tę instancję
 						jako pierwszy argument do metody. W tym przypadku nazwa <b>self</b> jest tylko konwencją, a nie
-						wymogiem.
+						wymogiem. self to sposób, żeby Python wiedział, z którym obiektem pracuje metoda. To "adres" obiektu.
 					</small>
 				</section>
 				<section>
@@ -95,7 +95,7 @@ samochod1 = Samochod("Toyota", "Camry")
 		wynik = 0
 						
 		def dodaj(self, x):
-				self.wynik += y
+				self.wynik += x
 				return self.wynik
 
 kalk = Kalkulator()
@@ -106,7 +106,7 @@ wynik = kalk.dodaj(3)
 			<section>
 				<h2>Dziedziczenie</h2>
 				<section>
-					<p>Tworzenie nowej klasy na podstawie istniejącej.</p>
+					<p>Tworzenie nowej klasy na podstawie istniejącej. W Pythonie klasa może dziedziczyć po wielu klasach jednocześnie. </p>
 					<pre><code data-trim class="python">class Pojazd:
 		def ruszaj(self):
 				print("Pojazd rusza.")
@@ -143,6 +143,8 @@ obiekt_potomny.metoda_potomna() # Lokalna metoda z KlasaPotomna
 
 				<section>
 					<p>Przesłanianie metod</p>
+					<p>W klasie KoloKolorowe metoda info ma taką samą nazwę jak w klasie Kolo, ale działa inaczej.</p>
+					<p>To właśnie przesłanianie.</p>
 					<pre><code data-trim class="python">class Kolo:
 		def info(self):
 				print("To jest kółko.")
@@ -159,6 +161,7 @@ class KoloKolorowe(Kolo):
 				<h2>Polimorfizm</h2>
 				<section>
 					<p>Przeładowywanie operatorów</p>
+					<p>Dzięki temu możemy dodać dwa punkty a i b tak samo jak liczby (a+b)</p>
 					<pre><code data-trim class="python">class Punkt:
 		def __init__(self, x, y):
 				self.x = x
@@ -173,6 +176,7 @@ c = a + b
 				</section>
 				<section>
 					<h3>Wywołanie obiektu jak funkcji</h3>
+					<p>W Pythonie obiekt może zachowywać się jak funkcja - wystarczy zdefiniować metodę _call_</p>
 					<pre><code data-trim class="python">class Licznik:
 		def __init__(self):
 				self.liczba = 0
@@ -194,6 +198,10 @@ print(licznik()) # Ponowne wywołanie
 				<section>
 					<p>Ukrywanie danych</p>
 					<small>Publiczne, chronione i prywatne atrybuty.</small>
+					<p>W Pythonie nie ma całkowicie prywatnych zmiennych.</p>
+					<p>x - publiczny</p>
+					<p>_x - chroniony(umowny)</p>
+					<p>__x - prywatny(z użyciem name mangling)</p>
 					<pre><code data-trim class="python">class KontoBankowe:
 		def __init__(self, saldo):
 				self._saldo = saldo # chroniony
@@ -277,6 +285,17 @@ class Kot(Zwierze):
 		def przedstaw_sie(self):
 				print(f"Jestem kotem o imieniu {self.imie}.")
 
+pies = Pies("Burek")
+kot = Kot("Jasper")
+pies.przedstaw_sie()
+kot.przedstaw_sie()		
+
+Wynik działania programu:
+
+Jestem psem o imieniu Burek.
+Jestem kotem o imieniu Jasper.
+		
+
 </code></pre>
 				<small>W tym przykładzie utworzono klasy <b>Zwierze</b>, <b>Pies</b> i <b>Kot</b>, demonstrując
 					polimorfizm poprzez przesłanianie metody
@@ -287,13 +306,43 @@ class Kot(Zwierze):
 			<section>
 				<h2>Abstrakcja w pythonie</h2>
 				<section>
-									<small>W Pythonie, moduł abc (Abstract Base Classes) dostarcza mechanizmów do tworzenia klas abstrakcyjnych i metod
+									<small>Abstrakcja = "klasa wzorzec", której nie da się użyć bez stworzenia bardziej szczegółowej klasy. W Pythonie, moduł abc (Abstract Base Classes) dostarcza mechanizmów do tworzenia klas abstrakcyjnych i metod
 										abstrakcyjnych. Klasa abstrakcyjna to klasa, która nie może być instancjonowana bezpośrednio, a metoda abstrakcyjna
 										to
 										metoda, która jest deklarowana, ale nie ma implementacji w samej klasie. Klasy dziedziczące po klasie abstrakcyjnej
 										muszą dostarczyć implementację dla wszystkich jej metod abstrakcyjnych.</small>
 				</section>
 				<section>
+					<p>Prosty przykład klasy abstrakcyjnej</p>
+					<pre><code data-trim class="python">from abc import ABC, abstractmethod
+						class Zwierze(ABC)
+						@abstractmethod
+						def daj_glos(self):
+							pass 
+
+						class Pies(Zwierze)
+						@abstractmethod
+						def daj_glos(self):
+							print("Hau")
+							
+						class Kot(Zwierze)
+						@abstractmethod
+						def daj_glos(self):
+							print("miau")	
+
+						#utworzenie obiektów i wywołanie metod
+						pies = Pies()
+						kot = Kot()
+						pies-daj_glos()
+						kot.daj_glos()</code></pre>
+
+						<small>
+							Tutaj <b>Zwierze</b> jest klasą abstrakcyjną – nie można jej użyć bezpośrednio.
+							Klasy <b>Pies</b> i <b>Kot</b> muszą zaimplementować metodę <b>daj_glos()</b>.
+						</small>
+				</section>
+				<section>
+
 					<pre style="font-size: 14px"><code style="max-height: 350px;" data-trim class="python">from abc import ABC, abstractmethod
 					
 class FiguraGeometryczna(ABC):
@@ -337,6 +386,19 @@ print(f"Powierzchnia prostokąta: {prostokat.oblicz_powierzchnie()}")
 				</section>
 
 			</section>
+			<section data-background-gradient="linear-gradient(45deg, #222, #444)">
+  				<h2>Podsumowanie – 4 filary OOP</h2>
+  				<ul>
+    			<li><b>Abstrakcja</b> – tworzenie ogólnych wzorców (klasy bazowe, interfejsy).</li>
+    			<li><b>Dziedziczenie</b> – przejmowanie cech i metod po innych klasach.</li>
+    			<li><b>Polimorfizm</b> – ta sama metoda może działać inaczej w różnych klasach.</li>
+    			<li><b>Hermetyzacja</b> – ukrywanie szczegółów działania i danych wewnątrz klasy.</li>
+  				</ul>
+ 				<small>
+    				Te cztery zasady są podstawą programowania obiektowego – w Pythonie i w innych językach.
+  				</small>
+			</section>
+
 		</div>
 	</div>
 
